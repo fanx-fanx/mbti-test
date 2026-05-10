@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医美医生的MBTI｜知晏 GoGo</title>
+<style>
+:root{
+  --ink:#1c1814; --ink-soft:#4a3f36; --ink-dim:#9a8878;
+  --cream:#faf7f2; --warm:#f4ede3; --card:#fff;
+  --border:#e6ddd2; --border-s:#d4c8ba;
+  --accent:#8b5e3c; --accent-l:#c49a72; --accent-xl:#f0e4d4;
+  --sel:#3d2b1a; --sel-bg:#ede4da;
+  --fn-serif: 'STSong','华文宋体','SimSun','FangSong',Georgia,serif;
+  --fn-body: 'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--ink);font-family:var(--fn-body);min-height:100vh;}
+#pb{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:var(--border);}
+#pbf{height:100%;background:var(--accent);transition:width .4s ease;width:0;}
+#cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem 5rem;position:relative;overflow:hidden;}
+#cover::before{content:'';position:absolute;top:-120px;right:-80px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(196,154,114,.14) 0%,transparent 65%);pointer-events:none;}
+#cover::after{content:'';position:absolute;bottom:-80px;left:-70px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(139,94,60,.09) 0%,transparent 65%);pointer-events:none;}
+.eye{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:1.6rem;opacity:.85;font-family:var(--fn-body);}
+.ctitle{font-family:var(--fn-serif);font-size:clamp(2rem,7vw,3.4rem);line-height:1.2;text-align:center;color:var(--ink);margin-bottom:.6rem;letter-spacing:.02em;}
+.ctitle em{font-style:italic;color:var(--accent);}
+.cdesc{font-size:.93rem;color:var(--ink-soft);text-align:center;max-width:420px;line-height:1.85;margin-bottom:2.4rem;}
+.cpills{display:flex;gap:.7rem;margin-bottom:2.8rem;flex-wrap:wrap;justify-content:center;}
+.cpill{font-size:.7rem;color:var(--ink-dim);background:var(--warm);border:1px solid var(--border);padding:.28rem .85rem;border-radius:20px;}
+.btn-s{background:var(--accent);color:#fff;border:none;padding:.88rem 2.6rem;border-radius:60px;font-size:.95rem;font-family:var(--fn-body);cursor:pointer;transition:.2s;letter-spacing:.04em;box-shadow:0 4px 18px rgba(139,94,60,.26);}
+.btn-s:hover{background:var(--sel);transform:translateY(-2px);box-shadow:0 6px 22px rgba(61,43,26,.3);}
+.cnote{margin-top:1.4rem;font-size:.7rem;color:var(--ink-dim);text-align:center;}
+#quiz{display:none;max-width:660px;margin:0 auto;padding:1rem 1rem 5rem;}
+.qhdr{text-align:center;padding:2rem 0 1.2rem;}
+.qctr{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:.3rem;}
+.qphase{font-family:var(--fn-serif);font-size:1rem;color:var(--ink-soft);font-style:italic;}
+.qcard{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:1.8rem 1.6rem 1.5rem;margin-bottom:1.1rem;box-shadow:0 2px 14px rgba(28,24,20,.05);animation:fadeUp .3s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.qnum{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem;font-weight:600;}
+.qtext{font-size:.97rem;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:1.1rem;}
+.opts{display:flex;flex-direction:column;gap:.5rem;}
+.opt{display:flex;align-items:flex-start;gap:.8rem;padding:.72rem 1rem;border:1px solid var(--border);border-radius:11px;background:var(--cream);cursor:pointer;transition:.15s;font-size:.87rem;color:var(--ink-soft);line-height:1.55;}
+.opt:hover{background:var(--accent-xl);border-color:var(--accent-l);color:var(--ink);}
+.opt.sel{background:var(--sel-bg);border-color:var(--accent);color:var(--sel);font-weight:600;}
+.opt input{display:none;}
+.olet{flex-shrink:0;width:21px;height:21px;border-radius:50%;border:1.5px solid var(--border-s);background:#fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--ink-dim);transition:.15s;margin-top:1px;}
+.opt.sel .olet{background:var(--accent);border-color:var(--accent);color:#fff;}
+.sbwrap{padding:.5rem 0 1rem;text-align:center;}
+.btn-sub{background:var(--accent);color:#fff;border:none;padding:.85rem 2.4rem;border-radius:60px;font-size:.95rem;font-family:var(--fn-body);cursor:pointer;transition:.2s;letter-spacing:.04em;box-shadow:0 4px 18px rgba(139,94,60,.22);}
+.btn-sub:hover{background:var(--sel);transform:translateY(-1px);}
+#result{display:none;max-width:660px;margin:0 auto;padding:1.5rem 1rem 5rem;}
+.rhero{background:var(--card);border-radius:22px;border:1px solid var(--border);overflow:hidden;margin-bottom:1rem;box-shadow:0 4px 24px rgba(28,24,20,.07);}
+.rhtop{padding:2.2rem 2rem 1.6rem;background:linear-gradient(135deg,var(--warm) 0%,var(--accent-xl) 100%);border-bottom:1px solid var(--border);}
+.rlbl{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;}
+.rmain{font-family:var(--fn-serif);font-size:clamp(1.9rem,5.5vw,2.7rem);color:var(--ink);line-height:1.2;margin-bottom:.35rem;}
+.rsub{font-size:.82rem;color:var(--ink-soft);margin-bottom:1rem;}
+.rtag{font-size:.97rem;color:var(--ink-soft);font-style:italic;line-height:1.65;padding:.8rem 1rem;background:rgba(255,255,255,.55);border-radius:10px;border-left:3px solid var(--accent-l);}
+.rbody{padding:1.8rem 2rem;}
+.rsec{margin-bottom:1.6rem;}
+.rsl{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent-l);font-weight:700;margin-bottom:.6rem;}
+.rtxt{font-size:.91rem;line-height:1.78;color:var(--ink-soft);}
+.rlist{list-style:none;display:flex;flex-direction:column;gap:.42rem;}
+.rlist li{font-size:.89rem;line-height:1.6;color:var(--ink-soft);padding:.52rem .9rem;background:var(--warm);border-radius:10px;display:flex;gap:.6rem;align-items:flex-start;}
+.rlist li::before{content:'·';color:var(--accent);font-size:1.1rem;line-height:1.25;flex-shrink:0;}
+.sting{background:var(--sel-bg);border-radius:13px;padding:1.1rem 1.3rem;border-left:3px solid var(--accent);font-size:.95rem;line-height:1.72;color:var(--sel);font-style:italic;}
+.hook{background:linear-gradient(135deg,var(--warm),var(--accent-xl));border-radius:13px;padding:1.2rem 1.4rem;border:1px solid var(--border-s);font-size:.91rem;line-height:1.78;color:var(--ink-soft);}
+.hook strong{color:var(--accent);}
+.verb-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.6rem;}
+.verb-chip{padding:.3rem .85rem;border-radius:20px;font-size:.78rem;border:1px solid var(--border);background:var(--warm);color:var(--ink-soft);transition:.15s;}
+.verb-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.rcta{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:1.6rem 1.8rem;margin-bottom:1rem;text-align:center;box-shadow:0 2px 12px rgba(28,24,20,.04);}
+.rcta p{font-size:.88rem;color:var(--ink-soft);line-height:1.72;margin-bottom:1.2rem;}
+.ctabtns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+.btn-cp{background:transparent;border:1px solid var(--border-s);padding:.65rem 1.4rem;border-radius:40px;font-size:.81rem;color:var(--ink-soft);cursor:pointer;transition:.15s;font-family:var(--fn-body);}
+.btn-cp:hover{background:var(--warm);border-color:var(--accent-l);}
+.btn-ct{background:var(--accent);color:#fff;border:none;padding:.65rem 1.4rem;border-radius:40px;font-size:.81rem;cursor:pointer;transition:.15s;font-family:var(--fn-body);box-shadow:0 3px 12px rgba(139,94,60,.22);}
+.btn-ct:hover{background:var(--sel);}
+.rfooter{text-align:center;font-size:.7rem;color:var(--ink-dim);line-height:1.8;padding:.5rem 0;}
+@media(max-width:580px){.rbody{padding:1.4rem 1.2rem;}.rhtop{padding:1.8rem 1.3rem 1.4rem;}.rcta{padding:1.3rem 1.2rem;}.qcard{padding:1.5rem 1.2rem 1.3rem;}}
+</style>
+</head>
+<body>
+<div id="pb"><div id="pbf"></div></div>
+<div id="cover">
+  <div class="eye">知晏 GoGo · 医美决策转化</div>
+  <h1 class="ctitle">医美医生的 <em>MBTI</em></h1>
+  <p class="cdesc">不是测测玩玩。<br>是帮你找到你天然的判断底色——<br>看见自己，才能被对的人看见。</p>
+  <div class="cpills">
+    <span class="cpill">12道场景题</span>
+    <span class="cpill">约3分钟</span>
+    <span class="cpill">8种判断风格</span>
+    <span class="cpill">主＋副类型</span>
+  </div>
+  <button class="btn-s" onclick="startQuiz()">开始识别我的风格</button>
+  <p class="cnote">为医美医生设计 · 知晏 GoGo 出品</p>
+</div>
+<div id="quiz">
+  <div class="qhdr">
+    <div class="qctr" id="qctr">已完成 0 / 12</div>
+    <div class="qphase" id="qphase">你的判断底色</div>
+  </div>
+  <div id="qarea"></div>
+  <div class="sbwrap" id="sbwrap" style="display:none;">
+    <button class="btn-sub" onclick="showResult()">查看我的风格报告</button>
+  </div>
+</div>
+<div id="result"></div>
+<script>
+const T = {
+  0:{name:"安全型", verb:"守护",tagline:"你的边界，是对客户最贵的保护",sting:"你不是不敢做，是你怕错。但你的「怕」，其实是你最大的资产——只是你还没学会把它讲出来。",core:"你的判断底色是安全边界。面对每一个方案，你第一个念头是「这样做会不会出问题」。你主动劝退、不轻易上量、对风险高度敏感——这是整个行业里最稀缺的专业自律。",pros:["几乎不会出现严重并发症，纠纷率极低","对「什么不该做」的判断极其准确","客户长期信任感稳定，复购质量高"],cons:["客户觉得你「不太想接我」，流失到更敢做的医生那里","你的保守容易被同行误读为技术不足","内容只讲「不能做」，没有棱角，观众记不住你"],hook:"你的问题不是判断，是表达。你守住了边界，但没让人知道你为什么这样守——<strong>把你的「不」讲出来，就是你最有力量的内容。</strong>",clients:"被过度营销坑过、极度重视安全感、追求长期稳妥的客户。"},
+  1:{name:"主导型", verb:"引领",tagline:"你的判断，就是客户最需要的答案",sting:"你享受被信任的感觉，但你很少问客户「你想要什么」。",core:"你的判断底色是给出最优解。你不喜欢客户在你面前犹豫——你会直接告诉她该怎么做。这种决断力让效率极高，方向极清晰，但也让某些客户感到被忽视。",pros:["决策效率极高，客户不需要在你这里纠结","方案体系完整，有权威感","适合需要被告知「正确答案」的理性客户"],cons:["强势过头，敏感型客户会被推走","客户当面说好，背后去了「更愿意听她说话」的医生","内容容易变成说教，观众觉得你高高在上"],hook:"你的判断很值钱，但客户只有在感觉被听懂之后，才愿意为你的判断买单。<strong>你缺的不是更好的方案，是让客户接住你的方式。</strong>",clients:"希望被直接告知「怎么做最好」、愿意放弃决策权的高度信任型客户。"},
+  2:{name:"关系型", verb:"共情",tagline:"你让客户感到：这里是安全的",sting:"客户爱你，但客户爱的不是你的专业，是你给的情绪价值。",core:"你的判断底色是先处理情绪，再处理问题。你会在面诊开始先问「你最近怎么样」，你能感受到客户说出口背后的那句话。这种共情力是极稀缺的临床能力——但用错地方会消耗你。",pros:["客户粘性极高，转介绍率惊人","能听到客户最真实的需求","能识别「表面需求」背后的「真实需求」，减少后悔率"],cons:["容易被情感依赖型客户消耗，边界模糊","内容太「暖」，缺乏专业锐度","价值都消耗在「让客户感觉好」上，而不是让她做对的决定"],hook:"你的共情能力是护城河，但河里也需要护栏。<strong>你不需要更努力，你需要更有边界——把你的「温柔」和「判断」同时讲出来。</strong>",clients:"敏感、有过不好体验、需要大量情绪支持才能做决定的客户。"},
+  3:{name:"分析型", verb:"解构",tagline:"你让客户真正搞明白了自己",sting:"你讲得都对，但客户听完去了那个「讲得没你清楚」的人那里。",core:"你的判断底色是给客户建立认知。你会花大量时间解释「为什么」——为什么这样老化、为什么这个顺序、为什么现在不合适。你给的是逻辑，不只是方案。",pros:["能把复杂问题拆成清晰的决策链条","理性型客户极度信任你","同行认可度高，适合做学术分享"],cons:["忽略客户的感性需求，逻辑赢了，关系输了","内容太干太硬，普通人不想听","被对标成「会讲但不会做」"],hook:"逻辑决定方案对不对，情绪决定客户跟不跟你。<strong>你缺的不是更严密的逻辑，是一个让逻辑「有温度」进入客户心里的方式。</strong>",clients:"做过大量功课、希望被讲透、不想被哄的理性型客户。"},
+  4:{name:"克制型", verb:"收敛",tagline:"你做的最好的，是你没有多做的那些",sting:"你心里知道「少即是多」，但客户总觉得你「不够」。",core:"你的判断底色是自然协调。你会主动减法，把客户想做的方案「做小」——不是因为技术保守，是因为你的审美标准里，过度干预是一种失败。",pros:["长期效果最自然，客户不容易后悔","同行愿意转诊给你，尤其是修复类","客户生命周期长，隐性复购率高"],cons:["被客户误解为「技术保守」或「能力不足」","在营销上天然吃亏，因为你不鼓励多做","内容视觉冲击力弱，被更「夸张」的对比图淹没"],hook:"你能看到客户三年后的样子，而她只相信眼前的对比图。<strong>你需要把「慢慢来」翻译成她愿意等的理由——这是你做内容最重要的一件事。</strong>",clients:"追求自然感、害怕被过度营销、对「网红脸」有警惕的客户。"},
+  5:{name:"拆解型", verb:"诊断",tagline:"你看见了别人看不见的真正问题",sting:"你帮客户把问题看清楚了。然后她带着这份清晰，去找别人执行了。",core:"你的判断底色是找到真正的问题。你会说「你以为你的问题是A，其实是B」——这是整个行业里最难得的诊断能力。你不满足于解决表面的问题，你要找到根本的原因。",pros:["对问题归因极其精准，客户觉得「终于有人说明白了」","能建立判断权威，客户有问题第一个想到你","适合做复杂案例，同行认可度高"],cons:["只诊断不治疗，客户拿着你的诊断去找别人执行","内容太技术，普通人听不懂","被对标成「会判断但不会操作」"],hook:"诊断是在建立信任，给方案才是成交的开始。<strong>你最值钱的能力是发现别人没发现的问题——现在你需要让客户知道，你不只是「最好的导航」，你也是「最好的司机」。</strong>",clients:"已经被各种说法弄晕、想先「搞清楚自己到底怎么回事」的客户。"},
+  6:{name:"审美型", verb:"协调",tagline:"你看见的是整体，客户只看见一条沟",sting:"你以为客户在找「审美」，其实她在找「被允许」——允许做这个选择，允许成为这个自己。",core:"你的判断底色是整体协调。你不做「突出某一个部位」的方案，你追求的是「整个人更对了」的感觉。你能一眼看出比例的问题，看见局部调整对整体的影响——这是高难度的审美判断力。",pros:["做出来的结果耐看、持久，不容易过时","客户在你这里不会「越做越不像自己」","高口碑，老客户介绍率高"],cons:["你的作品不适合做「对比图」——变化是整体微妙的，传播力弱","客户可能觉得「做了但不明显」——虽然这恰恰是你的成功","「整体感」的概念很难用短视频讲清楚"],hook:"你做的最好的作品，往往是别人说不出哪里变了，但整个人变了。<strong>你需要做的，是帮客户建立新的评价标准——让她知道「自然」才是最难的。</strong>",clients:"有品位、追求精致感、抗拒「网红脸」、想保留个人特质的客户。"},
+  7:{name:"长期型", verb:"规划",tagline:"你管理的不是一个项目，是一条老化曲线",sting:"你的客户信任你，愿意跟你很久。但「被信任」不等于「被看见」——你的护城河里只有老客户，外面的人根本不知道你存在。",core:"你的判断底色是时间轴。你会说「你现在的问题先不做，因为三年后做更值」——这是整个行业里最难得的战略视角。你不解决当下的问题，你管理客户整个老化周期。",pros:["客户生命价值极高，复购稳定","你比客户更了解她的脸，方案连贯性强","转介绍来的客户，往往也是「想长期跟一个人」的类型"],cons:["获客慢，前期大量投入建立信任","容易被短期流量型医生抢单，尤其在新客户第一次选择时","内容偏「延续性」，缺乏新鲜感，传播力弱"],hook:"你不是在做一个项目，你是在管理一条老化曲线。<strong>你需要把「长期主义」翻译成让第一次见你的客户也能感受到的东西——让外面的人知道你存在。</strong>",clients:"有长期主义认知、不想反复换医生、愿意为「对的人」付出时间成本的客户。"}
+};
+const VERBS = [{i:0,label:"守护"},{i:1,label:"引领"},{i:2,label:"共情"},{i:3,label:"解构"},{i:4,label:"收敛"},{i:5,label:"诊断"},{i:6,label:"协调"},{i:7,label:"规划"}];
+const QS = [
+  {phase:"你的判断底色",t:"一个新客户进来，还没开口，你第一眼扫描的是：",o:["她有没有不适合做某些项目的信号","她整张脸协调吗，哪里是真正的问题","她现在的情绪状态，焦虑还是理性","她来之前做过什么功课"],m:[0,6,2,3]},
+  {phase:"你的判断底色",t:"客户说「我觉得自己最近垮了很多」，你心里第一个念头更接近：",o:["先判断她说的「垮」风险级别怎样","先理解她为什么这样感觉、她在意什么","是松弛还是容积缺失，根本原因是什么","现在处理会不会过早，三年后再看更合适"],m:[0,2,5,7]},
+  {phase:"你的判断底色",t:"做完一个方案，你最满意的感觉通常来自：",o:["每一步都在安全边界内，没有勉强的地方","我主导了这个决定，方向是对的","客户真的被我看见了，真实需求被满足了","整体比例协调了，这张脸「对」了"],m:[0,1,2,6]},
+  {phase:"你和客户的关系",t:"客户带着一张网红模板来，你的第一个动作更可能是：",o:["直接告诉她这个方向不适合，给出我认为对的方案","问她为什么喜欢这张图，她喜欢的是什么感觉","拆解这张图和她真实面部的差距在哪里","把她的方案在整体协调性上重新调整"],m:[1,2,5,6]},
+  {phase:"你和客户的关系",t:"客户预算有限，想改善的地方很多，你会：",o:["先做最安全、最不会踩坑的那一个","我来决定——哪个对她帮助最大就做哪个","问她最在意哪个，以她的优先级为准","挑最影响整体协调感的那一步先做"],m:[0,1,2,6]},
+  {phase:"你和客户的关系",t:"一个敏感的客户不断追问「我到底该不该做」，你更倾向：",o:["安抚她，慢慢陪她把问题理清楚","直接给判断——根据我的评估，做或不做","帮她把真正的问题找出来，再决定","建议她等一等，放到整体时间轴里再看"],m:[2,1,5,7]},
+  {phase:"你的决策边界",t:"客户想做一个效果明显但你有保留的项目，你会：",o:["明确说不建议，讲清楚风险","可以做，但我会调小剂量，做克制版本","理解她为什么想做，找到需求背后的真实答案","先把她的整体老化路径讲清楚，再讨论这一步"],m:[0,4,2,7]},
+  {phase:"你的决策边界",t:"做完之后你觉得效果不够自然，你通常先反思：",o:["是不是当初就不该做","是不是做多了，量没有收住","是不是没有真正理解她想要的感觉","是不是整体顺序做错了，这一步太早"],m:[0,4,2,7]},
+  {phase:"你的决策边界",t:"同行问「你为什么不做那个项目」，你最可能的回答是：",o:["风险没把握好，我不做没把握的","做了效果会有，但会破坏整体感，不值得","客户其实不需要那个，她要的是别的东西","时机不对，现在做三年后会麻烦"],m:[0,6,5,7]},
+  {phase:"你的表达本能",t:"让你做一条视频，你最自然想讲的是：",o:["「这种情况我不建议做，原因是——」","「客户说想做，但我发现她真正的问题是——」","「我做方案时先看整体，因为整体感比局部更重要」","「今天分析一下为什么同样的问题，不同阶段处理完全不同」"],m:[0,5,6,3]},
+  {phase:"你的表达本能",t:"你最希望客户离开诊室时说的那句话是：",o:["「你是我见过最不会乱建议我做的医生」","「你帮我想清楚了我自己都没想明白的问题」","「我觉得你真的很懂我，不只是懂技术」","「听完你说的，我知道我接下来这几年怎么做了」"],m:[0,5,2,7]},
+  {phase:"你的表达本能",t:"如果给自己一个长期定位，你更倾向：",o:["医生里最敢说「不」的那个人","让每张脸都回到该有的比例的那个人","让客户真正看见自己问题的那个人","陪客户把老化这件事管好的那个人"],m:[0,6,5,7]}
+];
+let answered = 0;
+function pb(n){document.getElementById('pbf').style.width=n+'%';}
+function startQuiz(){document.getElementById('cover').style.display='none';document.getElementById('quiz').style.display='block';render();window.scrollTo(0,0);}
+function render(){const area=document.getElementById('qarea');area.innerHTML='';QS.forEach((q,qi)=>{const card=document.createElement('div');card.className='qcard';card.style.animationDelay=(qi*.03)+'s';card.dataset.qi=qi;card.innerHTML=`<div class="qnum">Q${qi+1} · ${q.phase}</div><div class="qtext">${q.t}</div><div class="opts" id="o${qi}"></div>`;area.appendChild(card);const od=card.querySelector('#o'+qi);['A','B','C','D'].forEach((L,oi)=>{const lbl=document.createElement('label');lbl.className='opt';lbl.innerHTML=`<input type="radio" name="q${qi}" value="${oi}"><span class="olet">${L}</span><span>${q.o[oi]}</span>`;lbl.querySelector('input').addEventListener('change',()=>pick(qi,oi,lbl,od));od.appendChild(lbl);});});upd();}
+function pick(qi,oi,lbl,od){od.querySelectorAll('.opt').forEach(l=>l.classList.remove('sel'));lbl.classList.add('sel');answered=document.querySelectorAll('input[type=radio]:checked').length;upd();}
+const PHASES=['你的判断底色','你和客户的关系','你的决策边界','你的表达本能'];
+function upd(){pb(Math.round(answered/QS.length*100));document.getElementById('qctr').textContent=`已完成 ${answered} / ${QS.length}`;document.getElementById('qphase').textContent=PHASES[Math.min(Math.floor(answered/3),3)];document.getElementById('sbwrap').style.display=answered===QS.length?'block':'none';}
+function calc(){const sc=[0,0,0,0,0,0,0,0];QS.forEach((q,qi)=>{const inp=document.querySelector(`input[name="q${qi}"]:checked`);if(inp)sc[q.m[+inp.value]]++;});const sorted=[...sc.map((s,i)=>({s,i}))].sort((a,b)=>b.s-a.s);let mi=sorted[0].i, si=sorted[1].i;if(sorted[0].s===sorted[1].s){const COMP={0:6,1:2,2:1,3:5,4:7,5:3,6:0,7:4};for(let k=1;k<sorted.length;k++){if(sorted[k].s===sorted[0].s&&sorted[k].i===COMP[mi]){si=sorted[k].i;break;}}}return {sc,mi,si};}
+function showResult(){if(document.querySelectorAll('input[type=radio]:checked').length!==QS.length){alert('请完成全部12道题目，再查看结果 :)');return;}const {sc,mi,si}=calc();const m=T[mi], s=T[si];const chips=VERBS.map(v=>`<span class="verb-chip${v.i===mi?' active':''}">${v.label}</span>`).join('');const bars=sc.map((v,i)=>{const w=Math.round(v/QS.length*100);const col=i===mi?'var(--accent)':i===si?'var(--accent-l)':'var(--border-s)';return `<div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.42rem;"><span style="font-size:.68rem;color:var(--ink-dim);width:46px;flex-shrink:0;">${T[i].name}</span><div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${w}%;background:${col};border-radius:3px;transition:.5s;"></div></div><span style="font-size:.64rem;color:var(--ink-dim);width:14px;text-align:right;">${v}</span></div>`;}).join('');document.getElementById('quiz').style.display='none';const el=document.getElementById('result');el.style.display='block';el.innerHTML=`<div class="rhero"><div class="rhtop"><div class="rlbl">你的主类型</div><div class="rmain">${m.name}</div><div class="rsub">副类型：${s.name} &nbsp;·&nbsp; 核心动词：${m.verb}</div><div class="rtag">${m.tagline}</div></div><div class="rbody"><div class="rsec"><div class="rsl">8种判断风格的核心动词</div><div class="verb-row">${chips}</div><div class="rtxt" style="font-size:.8rem;color:var(--ink-dim);">你的底色是「${m.verb}」，副色彩是「${s.verb}」</div></div><div class="rsec"><div class="rsl">一句话刺痛</div><div class="sting">${m.sting}</div></div><div class="rsec"><div class="rsl">你的底色</div><div class="rtxt">${m.core}</div></div><div class="rsec"><div class="rsl">你的优势</div><ul class="rlist">${m.pros.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="rsec"><div class="rsl">要留意的陷阱</div><ul class="rlist">${m.cons.map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="rsec"><div class="rsl">你卡住的真正原因</div><div class="hook">${m.hook}</div></div><div class="rsec"><div class="rsl">最适合你的客户</div><div class="rtxt">${m.clients}</div></div><div class="rsec"><div class="rsl">得分分布</div><div style="padding:.2rem 0;">${bars}</div></div></div></div><div class="rcta"><p>这是一版初步识别结果。<br>你的主副类型背后还有一整套内容方向——<br><strong style="color:var(--accent);">测出类型只是第一步，用对类型才是真正的开始。</strong></p><div class="ctabtns"><button class="btn-cp" onclick="doCopy(${mi},${si})">复制我的报告</button><button class="btn-ct" onclick="doContact()">把结果发给知晏</button></div></div><div class="rfooter">知晏 GoGo · 帮医生先看见自己，再被对的人看见<br>医美决策转化 · 医生的MBTI · 8种判断风格</div>`;pb(100);window.scrollTo({top:0,behavior:'smooth'});}
+function doCopy(mi,si){const m=T[mi],s=T[si];const txt=`【医美医生的MBTI · 知晏 GoGo】\n\n主类型：${m.name}（核心动词：${m.verb}）\n副类型：${s.name}（核心动词：${s.verb}）\n\n${m.tagline}\n\n一句话刺痛：\n${m.sting}\n\n你的底色：\n${m.core}\n\n优势：\n${m.pros.map(x=>'· '+x).join('\n')}\n\n要留意的陷阱：\n${m.cons.map(x=>'· '+x).join('\n')}\n\n你卡住的真正原因：\n${m.hook.replace(/<[^>]+>/g,'')}\n\n最适合你的客户：\n${m.clients}\n\n——\n知晏 GoGo · 帮医生先看见自己，再被对的人看见`;navigator.clipboard.writeText(txt).then(()=>alert('已复制到剪贴板 ✓')).catch(()=>alert('请手动复制'));}
+function doContact(){alert('请截图保存你的结果\n然后在视频号评论区扣「测试」\n或添加知晏微信（请替换为真实微信号）\n\n知晏会直接联系你。');}
+</script>
+</body>
+</html>
